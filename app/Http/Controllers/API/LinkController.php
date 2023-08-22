@@ -16,10 +16,16 @@ class LinkController extends Controller
     {
         $query = Link::query();
         // Busca textual
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
+        if ($request->has('original_url')) {
+            $searchTerm = $request->input('original_url');
             $query->where('original_url', 'like', "%$searchTerm%");
         }
+
+        if ($request->has('slug')) {
+            $searchTerm = $request->input('slug');
+            $query->where('slug', 'like', "%$searchTerm%");
+        }
+
         // Ordenação
         if ($request->has('sort_by') && $request->has('sort_direction')) {
             $sortBy = $request->input('sort_by');

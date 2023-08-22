@@ -14,4 +14,3 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::apiResource('links', \App\Http\Controllers\API\LinkController::class);
-Route::get('/{slug}', [\App\Http\Controllers\API\LinkController::class, 'redirectToOriginal']);
