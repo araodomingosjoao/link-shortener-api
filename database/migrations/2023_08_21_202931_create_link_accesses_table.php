@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('link_accesses', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('link_id');
+            $table->uuid('id')->primary();
+            $table->uuid('link_id');
             $table->ipAddress('ip');
             $table->text('user_agent');
     
-            $table->foreign('link_id')->references('id')->on('links')->onDelete('cascade');
+            $table->foreign('link_id')->references('id')->on('links');
             $table->timestamps();
         });
     }

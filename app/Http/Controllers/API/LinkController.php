@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateLinkRequest;
 use App\Http\Requests\UpdateLinkRequest;
+use App\Http\Resources\LinkResource;
 use App\Models\Link;
 use App\Models\LinkAccess;
 use Illuminate\Http\Request;
@@ -20,12 +21,10 @@ class LinkController extends Controller
             $searchTerm = $request->input('original_url');
             $query->where('original_url', 'like', "%$searchTerm%");
         }
-
         if ($request->has('slug')) {
             $searchTerm = $request->input('slug');
             $query->where('slug', 'like', "%$searchTerm%");
         }
-
         // Ordenação
         if ($request->has('sort_by') && $request->has('sort_direction')) {
             $sortBy = $request->input('sort_by');
@@ -51,7 +50,7 @@ class LinkController extends Controller
     public function show($id)
     {
         $link = Link::findOrFail($id);
-        return response()->json($link);
+        return response()->json(LinkResource::make($link));
     }
 
     public function update(UpdateLinkRequest $request, $id)
@@ -75,7 +74,6 @@ class LinkController extends Controller
         $link = Link::where('slug', $slug)->first();
 
         if ($link) {
-            // Registra o acesso
             $accessData = [
                 'link_id' => $link->id,
                 'ip' => request()->ip(),
@@ -83,14 +81,11 @@ class LinkController extends Controller
             ];
             LinkAccess::create($accessData);
 
-            // Incrementa o contador de acessos
             $link->increment('access_count');
 
-            // Redireciona para a URL original
             return Redirect::away($link->original_url);
         }
 
-        // Caso o link não seja encontrado, você pode retornar uma resposta de erro apropriada.
         return response()->json(['message' => 'Link not found'], 404);
     }
 }

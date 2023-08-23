@@ -13,4 +13,5 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::apiResource('links', \App\Http\Controllers\API\LinkController::class);
+Route::apiResource('/links', \App\Http\Controllers\API\LinkController::class);
+Route::get('/access', [\App\Http\Controllers\API\LinkAccessController::class, 'index']);
